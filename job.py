@@ -4,6 +4,7 @@ import pandas as pd
 
 API_KEY = os.getenv("api_key")
 
+
 SPORT = 'aussierules_afl' # use the sport_key from the /sports endpoint below, or use 'upcoming' to see the next 8 games across all sports
 REGIONS = 'au' # uk | us | eu | au. Multiple can be specified if comma delimited
 MARKETS = 'h2h' # h2h | spreads | totals. Multiple can be specified if comma delimited
@@ -60,12 +61,12 @@ df_1 = dftemp[0].apply(lambda x: pd.Series(x.values()))
 df_2 = dftemp[1].apply(lambda x: pd.Series(x.values()))
 df_out = pd.concat([df_1, df_2])
 df_out.columns =['team', 'odds']
-df_out
 
 df_main = df1[['id', 'commence_time', 'home_team', 'away_team']]
-df_main
 df_main = df_main.merge(df_out, how='left', left_on='home_team', right_on='team')
 df_main = df_main.merge(df_out, how='left', left_on='away_team', right_on='team')
 df_main.drop(['team_x', 'team_y'], axis='columns', inplace=True)
 df_main.rename(columns={'odds_x':'home_odds', 'odds_y':'away_odds'}, inplace=True)
+df_main['commence_time'] = pd.to_datetime(df_main['commence_time'])
+df_main['snapshot_time'] = pd.Timestamp.utcnow()
 df_main
