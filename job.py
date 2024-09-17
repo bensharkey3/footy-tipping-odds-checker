@@ -96,6 +96,7 @@ def create_file():
 def incremental_load(afl_odds, df_main):
     odds_out = pd.concat([afl_odds, df_main])
     odds_out = odds_out.drop_duplicates(ignore_index=True)
+    odds_out = odds_out.groupby(['id', 'commence_time', 'home_team', 'away_team', 'home_odds', 'away_odds'])[['snapshot_time']].max().sort_values(by=['snapshot_time', 'id'], ascending=False).reset_index()
     return odds_out
 
 
